@@ -52,7 +52,7 @@ class QueryViewController: UITableViewController {
     }
     
     /// Finds the map controller and updates its data
-    private func updateMap(#animated: Bool) {
+    private func updateMap(animated animated: Bool) {
         if let tabs = (self.parentViewController?.parentViewController as? UITabBarController) {
             if let mapNav = tabs.viewControllers![1] as? UINavigationController {
                 if let map = mapNav.viewControllers[0] as? MapViewController {
@@ -62,19 +62,19 @@ class QueryViewController: UITableViewController {
         }
     }
     
-    override func tableView(tableView: UITableView!, didSelectRowAtIndexPath indexPath: NSIndexPath!) {
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         // Show the map
         if let tabs = (self.parentViewController?.parentViewController as? UITabBarController) {
             tabs.selectedIndex = 1
         }
     }
     
-    override func tableView(tableView: UITableView!, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return data.count
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let c = tableView.dequeueReusableCellWithIdentifier(cellId) as! UITableViewCell!
+        let c = tableView.dequeueReusableCellWithIdentifier(cellId) as UITableViewCell!
         
         let item = data[indexPath.row]
         

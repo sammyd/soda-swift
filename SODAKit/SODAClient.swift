@@ -79,45 +79,43 @@ class SODAClient {
         
         // Send it
         let session = NSURLSession.sharedSession()
-        var task = session.dataTaskWithRequest(request, completionHandler: { data, response, reqError in
+        let task = session.dataTaskWithRequest(request, completionHandler: { data, response, reqError in
             
             // We sync the callback with the main thread to make UI programming easier
             let syncCompletion = { res in NSOperationQueue.mainQueue().addOperationWithBlock { completionHandler (res) } }
             
             // Give up if there was a net error
-            if reqError != nil {
-                syncCompletion(.Error (reqError))
+            if let reqError = reqError {
+                syncCompletion(.Error(reqError))
                 return
             }
             
             // Try to parse the JSON
-//            println(NSString (data: data, encoding: NSUTF8StringEncoding))
-            
-            var jsonError: NSError?
-            var jsonResult: AnyObject! = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers, error: &jsonError)
-            if let error = jsonError {
-                syncCompletion(.Error (error))
-                return
+            var jsonResult: AnyObject!
+            do {
+                jsonResult = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.MutableContainers)
+            } catch let error as NSError {
+                syncCompletion(.Error(error))
+              return
+            } catch {
+                fatalError()
             }
             
             // Interpret the JSON
             if let a = jsonResult as? [[String: AnyObject]] {
                 syncCompletion(.Dataset (a))
-            }
-            else if let d = jsonResult as? [String: AnyObject] {
-                if let e : AnyObject = d["error"] {
-                    if let m : AnyObject = d["message"] {
-                        syncCompletion(.Error (NSError(domain: "SODA", code: 0, userInfo: ["Error": m])))
-                        return
-                    }
+            } else if let d = jsonResult as? [String: AnyObject] {
+                if let m : AnyObject = d["message"] where d["error"] != nil {
+                    syncCompletion(.Error (NSError(domain: "SODA", code: 0, userInfo: ["Error": m])))
+                    return
                 }
                 syncCompletion(.Dataset ([d]))
-            }
-            else {
-                syncCompletion(.Error (NSError()))
+            } else {
+                let error = NSError(domain: "SODA", code: 0, userInfo: nil)
+                syncCompletion(.Error (error))
             }
         })
-        task.resume()
+        task?.resume()
     }
     
     /// Converts an NSDictionary into a query string.

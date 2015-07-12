@@ -22,7 +22,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     }
     
     func updateWithData(data: [[String: AnyObject]]!, animated: Bool) {
-        
+      
         // Remember the data because we may not be able to display it yet
         self.data = data
         
@@ -31,9 +31,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         }
         
         // Clear old annotations
-        if let ex = mapView.annotations {
-            mapView.removeAnnotations(ex)
-        }
+          mapView.removeAnnotations(mapView.annotations)
         
         // Longitude and latitude accumulators so we can find the center
         var lata : CLLocationDegrees = 0.0
@@ -42,13 +40,13 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         // Create annotations for the data
         var anns : [MKAnnotation] = []
         for item in data {
-            if let loc: AnyObject = item["incident_location"] {
+            if let _: AnyObject = item["incident_location"] {
                 let lat = (item["latitude"]! as! NSString).doubleValue
                 let lon = (item["longitude"]! as! NSString).doubleValue
                 lata += lat
                 lona += lon
                 let a = MKPointAnnotation()
-                a.title = item["event_clearance_description"]! as! String
+                a.title = item["event_clearance_description"] as? String
                 a.coordinate = CLLocationCoordinate2D (latitude: lat, longitude: lon)
                 anns.append(a)
             }
