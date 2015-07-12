@@ -22,7 +22,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		222D7F8F1B5291B700A168DA /* SODAKit-wOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = "SODAKit-wOS.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		222D7F8F1B5291B700A168DA /* SODAKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SODAKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D0A131C199806580054B129 /* SODASample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SODASample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D0A131F199806580054B129 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2D0A1320199806580054B129 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -111,7 +111,7 @@
 				2D9E264019972FD20047C5C8 /* SODAKit.framework */,
 				2D9E264B19972FD20047C5C8 /* SODATests.xctest */,
 				2D0A131C199806580054B129 /* SODASample.app */,
-				222D7F8F1B5291B700A168DA /* SODAKit-wOS.framework */,
+				222D7F8F1B5291B700A168DA /* SODAKit.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -187,7 +187,7 @@
 			);
 			name = "SODAKit-wOS";
 			productName = "SODAKit-wOS";
-			productReference = 222D7F8F1B5291B700A168DA /* SODAKit-wOS.framework */;
+			productReference = 222D7F8F1B5291B700A168DA /* SODAKit.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		2D0A131B199806580054B129 /* SODASample */ = {
@@ -390,7 +390,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.socrata.SODAKit;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = SODAKit;
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 4;
@@ -412,7 +412,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.socrata.SODAKit;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = SODAKit;
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 4;
