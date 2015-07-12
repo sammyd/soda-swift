@@ -14,37 +14,37 @@ import Foundation
 let SODADefaultLimit = 1000
 
 /// The result of an asynchronous SODAClient.queryDataset call. It can either succeed with data or fail with an error.
-enum SODADatasetResult {
+public enum SODADatasetResult {
     case Dataset ([[String: AnyObject]])
     case Error (NSError)
 }
 
 /// The result of an asynchronous SODAClient.getRow call. It can either succeed with data or fail with an error.
-enum SODARowResult {
+public enum SODARowResult {
     case Row ([String: AnyObject])
     case Error (NSError)
 }
 
 /// Callback for asynchronous queryDataset methods of SODAClient
-typealias SODADatasetCompletionHandler = SODADatasetResult -> Void
+public typealias SODADatasetCompletionHandler = SODADatasetResult -> Void
 
 /// Callback for asynchronous getRow method of SODAClient
-typealias SODARowCompletionHandler = SODARowResult -> Void
+public typealias SODARowCompletionHandler = SODARowResult -> Void
 
 /// Consumes data from a Socrata OpenData end point.
-class SODAClient {
+public class SODAClient {
 
     let domain: String
     let token: String
 
     /// Initializes this client to communicate with a SODA endpoint.
-    init(domain: String, token: String) {
+    public init(domain: String, token: String) {
         self.domain = domain
         self.token = token
     }
 
     /// Gets a row using its identifier. See http://dev.socrata.com/docs/row-identifiers.html
-    func getRow(row: String, inDataset: String, _ completionHandler: SODARowCompletionHandler) {
+    public func getRow(row: String, inDataset: String, _ completionHandler: SODARowCompletionHandler) {
         getDataset("\(inDataset)/\(row)", withParameters: [:]) { res in
             switch res {
             case .Dataset (let rows):
@@ -56,7 +56,7 @@ class SODAClient {
     }
 
     /// Asynchronously gets a dataset using a simple filter query. See http://dev.socrata.com/docs/filtering.html
-    func getDataset(dataset: String, withFilters: [String: String], limit: Int = SODADefaultLimit, offset: Int = 0, _ completionHandler: SODADatasetCompletionHandler) {
+    public func getDataset(dataset: String, withFilters: [String: String], limit: Int = SODADefaultLimit, offset: Int = 0, _ completionHandler: SODADatasetCompletionHandler) {
         var ps = withFilters
         ps["$limit"] = "\(limit)"
         ps["$offset"] = "\(offset)"
@@ -64,7 +64,7 @@ class SODAClient {
     }
 
     /// Low-level access for asynchronously getting a dataset. You should use SODAQueries instead of this. See http://dev.socrata.com/docs/queries.html
-    func getDataset(dataset: String, withParameters: [String: String], _ completionHandler: SODADatasetCompletionHandler) {
+    public func getDataset(dataset: String, withParameters: [String: String], _ completionHandler: SODADatasetCompletionHandler) {
         // Get the URL
         let query = SODAClient.paramsToQueryString (withParameters)
         let path = dataset.hasPrefix("/") ? dataset : ("/resource/" + dataset)
@@ -135,13 +135,13 @@ class SODAClient {
 /// SODAQuery extension to SODAClient
 extension SODAClient {
     /// Get a query object that can be used to query the client using a fluent syntax.
-    func queryDataset(dataset: String) -> SODAQuery {
+    public func queryDataset(dataset: String) -> SODAQuery {
         return SODAQuery (client: self, dataset: dataset)
     }
 }
 
 /// Assists in the construction of a SoQL query.
-class SODAQuery
+public class SODAQuery
 {
     let client: SODAClient
     let dataset: String
@@ -149,7 +149,7 @@ class SODAQuery
     let parameters: [String: String]
     
     /// Initializes all the parameters of the query
-    init(client: SODAClient, dataset: String, parameters: [String: String] = [:])
+    public init(client: SODAClient, dataset: String, parameters: [String: String] = [:])
     {
         self.client = client
         self.dataset = dataset
@@ -157,49 +157,49 @@ class SODAQuery
     }
 
     /// Generates SoQL $select parameter. Use the AS operator to modify the output.
-    func select(select: String) -> SODAQuery {
+    public func select(select: String) -> SODAQuery {
         var ps = self.parameters
         ps["$select"] = select
         return SODAQuery (client: self.client, dataset: self.dataset, parameters: ps)
     }
     
     /// Generates SoQL $where parameter. Use comparison operators and AND, OR, NOT, IS NULL, IS NOT NULL. Strings must be single-quoted.
-    func filter(filter: String) -> SODAQuery {
+    public func filter(filter: String) -> SODAQuery {
         var ps = self.parameters
         ps["$where"] = filter
         return SODAQuery (client: self.client, dataset: self.dataset, parameters: ps)
     }
     
     /// Generates simple filter parameter. Multiple filterColumns are allowed in a single query.
-    func filterColumn(column: String, _ value: String) -> SODAQuery {
+    public func filterColumn(column: String, _ value: String) -> SODAQuery {
         var ps = self.parameters
         ps[column] = value
         return SODAQuery (client: self.client, dataset: self.dataset, parameters: ps)
     }
 
     /// Generates SoQL $q parameter. This uses a multi-column full text search.
-    func fullText(fullText: String) -> SODAQuery {
+    public func fullText(fullText: String) -> SODAQuery {
         var ps = self.parameters
         ps["$q"] = fullText
         return SODAQuery (client: self.client, dataset: self.dataset, parameters: ps)
     }
     
     /// Generates SoQL $order ASC parameter.
-    func orderAscending(column: String) -> SODAQuery {
+    public func orderAscending(column: String) -> SODAQuery {
         var ps = self.parameters
         ps["$order"] = "\(column) ASC"
         return SODAQuery (client: self.client, dataset: self.dataset, parameters: ps)
     }
 
     /// Generates SoQL $order DESC parameter.
-    func orderDescending(column: String) -> SODAQuery {
+    public func orderDescending(column: String) -> SODAQuery {
         var ps = self.parameters
         ps["$order"] = "\(column) DESC"
         return SODAQuery (client: self.client, dataset: self.dataset, parameters: ps)
     }
     
     /// Generates SoQL $group parameter. Use select() with aggregation functions like MAX and then name the column to group by.
-    func group(column: String) -> SODAQuery {
+    public func group(column: String) -> SODAQuery {
         var ps = self.parameters
         ps["$group"] = column
         return SODAQuery (client: self.client, dataset: self.dataset, parameters: ps)
@@ -213,19 +213,19 @@ class SODAQuery
     }
     
     /// Generates SoQL $offset parameter.
-    func offset(offset: Int) -> SODAQuery {
+    public func offset(offset: Int) -> SODAQuery {
         var ps = self.parameters
         ps["$offset"] = "\(offset)"
         return SODAQuery (client: self.client, dataset: self.dataset, parameters: ps)
     }
     
     /// Performs the query asynchronously and sends all the results to the completion handler.
-    func get(completionHandler: SODADatasetResult -> Void) {
+    public func get(completionHandler: SODADatasetResult -> Void) {
         client.getDataset(dataset, withParameters: parameters, completionHandler)
     }
 
     /// Performs the query asynchronously and sends the results, one row at a time, to an iterator function.
-    func each(iterator: SODARowResult -> Void) {
+    public func each(iterator: SODARowResult -> Void) {
         client.getDataset(dataset, withParameters: parameters) { res in
             switch res {
             case .Dataset (let data):
